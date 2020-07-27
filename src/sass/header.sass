@@ -1,0 +1,174 @@
+$maxWidth: 1440
+
+@mixin adapt-font($pcSize, $mobSize) 
+	$addSize: $pcSize - $mobSize
+	$maxWidth: $maxWidth - 540
+	font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 540px) / #{$maxWidth}))
+
+.header
+	display: block
+	height: fit-content
+	width: 100%
+	background: rgba(0, 0, 0, 0.28)
+	position: absolute
+	top: 0
+	left: 0
+	z-index: 2
+	& .header__fix-container
+		position: relative
+	& .header__contacts
+		height: 94px
+		display: flex
+		justify-content: space-between
+		align-items: center
+		@media(max-width: 992px)
+			width: 100%
+			height: fit-content
+			padding: 30px 0
+		@media(max-width: 540px)
+			align-items: center
+		@media(max-width: 375px)
+			width: 100%
+			height: 180px
+			padding: 0
+			flex-direction: column
+			align-items: flex-start
+			padding-top: 42px
+		& .header__items
+			height: 55px
+			width: 56%
+			display: flex
+			justify-content: space-between
+			font-weight: 700
+			@include adapt-font(20,16)
+			@media(max-width: 992px)
+				width: 100%
+				min-width: 570px
+				justify-content: center
+				padding: 0 21px 0 0
+				@include adapt-font(18,16)
+			@media(max-width: 767px)
+				width: 78%
+				min-width: 287px
+				padding: 0 55px 0 15px
+			@media(max-width: 540px)
+				width: 100%
+				justify-content: center
+				align-items: center
+				min-width: auto
+			@media(max-width: 375px)
+				padding: 0
+				width: 100%
+			& .header_item1, .header_item2
+				display: flex
+				align-items: center
+				& a
+					color: #F2F2F2
+				& img
+					margin: 0 11px 0 0
+			& .header_item1
+				@media(max-width: 992px)
+					margin-right: 20px
+				@media(max-width: 767px)
+					margin-right: 0
+				@media(max-width: 540px)
+					display: none
+				@media(max-width: 375px)
+					margin: 0
+					width: 100%
+					display: flex
+					justify-content: center
+			& .header_item2
+				@media(max-width: 767px)
+					display: none
+			& .header_item1__mobile, .header_item2__mobile
+				display: none
+				margin: 0 15%
+				@media(max-width: 540px)
+					display: block
+				@media(max-width: 400px)
+					margin: 0
+				@media(max-width: 375px)
+					display: none
+				& img
+					width: 40px
+					height: 40px
+					object-fit: contain
+			& .header_item2__mobile
+				@media(max-width: 400px)
+					display: none
+		& .btn-call
+			@media(max-width: 992px)
+				display: none
+	& .header__menu
+		height: 96px
+		display: flex
+		justify-content: center
+		align-items: center
+		transition: all ease .2s
+		opacity: 1
+		@media(max-width: 992px)
+			display: none
+		& .menu__nav-list
+			text-transform: uppercase
+			display: flex
+			& .nav-list__item
+				font-size: 16px
+				font-weight: 500
+				margin: 0 49px 0 0
+			& .nav-list__item_margin-0
+				margin:  0
+			& .nav-list__anchor
+				color: #F2F2F2
+				position: relative
+				transition: all ease-in-out 1s
+				&:before
+					content: ''
+					position: absolute
+					width: 100%
+					height: 3px
+					background: #FFD338
+					box-shadow: 0px 4px 17px rgba(255, 211, 56, 0.58)
+					left: 0
+					bottom: -2px
+					transition: .5s
+					transform: scale(0)
+					transform-origin: left
+				&:hover:before
+					transform: scale(1)
+	& .btn-burger
+		width: 21px
+		height: 12px
+		position: absolute
+		display: none
+		flex-direction: column
+		justify-content: space-between
+		align-items: flex-end
+		cursor: pointer
+		@media(max-width: 992px)
+			display: flex
+			top: 60px
+			right: 15px
+			transform: translate(0,-50%)
+		@media(max-width: 767px)
+			width: 40px
+			height: 24px
+		@media(max-width: 375px)
+			width: 40px
+			height: 24px
+			top: 67px
+		& .btn-burger__item
+			background: #FFD338
+			height: 2px
+			@media(max-width: 767px)
+				height: 4px
+		& .btn-burger__item.top
+			width: 100%
+		& .btn-burger__item.middle
+			width: 17px
+			@media(max-width: 767px)
+				width: 78%
+		& .btn-burger__item.bottom
+			width: 13px
+			@media(max-width: 767px)
+				width: 61%

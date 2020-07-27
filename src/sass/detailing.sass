@@ -1,0 +1,99 @@
+$maxWidth: 1440
+@mixin adapt-font($pcSize, $mobSize) 
+	$addSize: $pcSize - $mobSize
+	$maxWidth: $maxWidth - 320
+	font-size: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth}))
+
+.detailing
+	height: 896px
+	width: 100%
+	background-image: url('/img/bg1.png')
+	background-repeat: no-repeat
+	background-size: cover
+	& .detailing__fix-container
+		position: relative
+		display: flex
+		align-items: flex-end
+		position: relative
+		& .detailing__btn-call
+			display: none
+			position: absolute
+			transform: translate(-50%,0)
+			left: 50%
+			@media(max-width:992px)
+				display: block
+				top: 194px
+			@media(max-width:375px)
+				top: 234px
+		& .detailing__preview
+			height: 65%
+			color: #F2F2F2
+			display: flex
+			flex-direction: column
+			justify-content: flex-start
+			@media(max-width:767px)
+				padding: 0 15px
+			@media(max-width:375px)
+				padding: 0 
+			& .detailing__title_h1
+				width: 67%
+				text-transform: uppercase
+				@include adapt-font(30,18)
+				font-weight: 700
+				letter-spacing: 0.05em
+				line-height: 125.6%
+				position: relative
+				@media(max-width:1200px)
+					width: 78%
+				@media(max-width:992px)
+					width: 85%
+				@media(max-width:660px)
+					width: 100%
+					margin-left: 9px
+					margin-top: 14px
+				&:before
+					content: url('/img/h1_before.png')
+					position: absolute
+					top: 50%
+					left: -12.5px
+					transform: translate(0, -50%)
+			& .detailing__article
+				width: 45%
+				@include adapt-font(16,14)
+				font-weight: 500
+				letter-spacing: 0.05em
+				line-height: 125.6%
+				margin: 4% 0
+				@media(max-width:992px)
+					width: 375px
+				@media(max-width:600px)
+					width: 100%
+					margin-top: 38px
+					line-height: 18px
+		& .preview__advantage-list
+			@media(max-width:600px)
+				margin-top: 23px
+			& .advantage-list__item
+				font-size: 18px
+				@include adapt-font(18,16)
+				font-weight: 600
+				line-height: 125.6%
+				letter-spacing: 0.05em
+				position: relative
+				padding: 0 0 0 37px
+				margin: 0 0 17px 0
+				&:before
+					content: url('/img/list_item.png')
+					position: absolute
+					left: -7px
+				& .advantage-list__item_small
+					font-size: 16px
+					@include adapt-font(16,14)
+					font-weight: 400
+			& :nth-last-child(1).advantage-list__item
+				margin: 0
+		& .preview__img_absolute
+			position: absolute
+			left: 50%
+			bottom: 7%
+			transform: translate(-50%,0)

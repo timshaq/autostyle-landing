@@ -1,0 +1,133 @@
+.case
+	height: 715px
+	display: flex
+	align-items: flex-end
+	position: relative
+	@media(max-width:992px)
+		height: fit-content
+		padding: 60px 0
+	& .case__fix-container
+		height: 92%
+		display: flex
+		@media(max-width:992px)
+			height: fit-content
+			flex-wrap: wrap
+			padding: 0
+		& .case__col_left
+			width: 43%
+			@media(max-width:992px)
+				width: 100%
+				padding: 0 15px
+			& .case__description
+				padding: 12% 0 0 0
+				@media(max-width:992px)
+					padding: 0
+					margin: 30px 0
+				@media(max-width:375px)
+					padding: 0
+					margin: 60px 0 30px 0
+				& .case__title_h4
+					font-size: 27px
+					font-weight: 600
+					line-height: 140%
+				& .case_subtitle
+					font-size: 16px
+					line-height: 140%
+					padding: 6.5% 0 0 0
+					& .subtitle__item_bold
+						font-weight: 600
+				& .case__buttons
+					width: 71.5%
+					display: flex
+					justify-content: flex-end
+					margin: 37px 0 0 0
+					@media(max-width:992px)
+						width: 100%
+						justify-content: center
+					& .description__btn-prev
+						height: 15px
+						width: 30px
+						background-image: url('/img/btn-prev.png')
+						background-color: transparent
+						background-repeat: no-repeat
+						margin: 0 18px 0 0
+					& .description__btn-next
+						height: 15px
+						width: 30px
+						background-image: url('/img/btn-next.png')
+						background-color: transparent
+						background-repeat: no-repeat
+		& .case__col_right
+			width: 57%
+			padding: 2% 0 0 0
+			@media(max-width:992px)
+				width: 100%
+				height: fit-content
+				padding: 0
+			@media(max-width:767px)
+				padding: 15px 0 15px 0
+				background-color: rgba(241, 241, 241, 0.47)
+			& *
+				outline: none
+			& .case__results
+				height: 73%
+				width: 100%
+				min-height: 305px
+				@media(max-width:992px)
+					padding: 0 10%
+				@media(max-width:600px)
+					padding: 0
+				@media(max-width:375px)
+					width: 100%
+					height: fit-content
+				@media(max-height:450px)
+					padding: 0 10%
+				& .case__result
+					display: flex
+					flex-direction: column
+					& .case__title_h5
+						font-size: 16px
+						font-weight: 600
+						line-height: 140%
+						color: #202020
+						align-self: flex-end
+						@media(max-width:992px)
+							order: 2
+							align-self: center
+							margin-top: 20px
+					& .result__img
+						padding: 5% 0 0 0
+						max-width: 100%
+						width: 100%
+						height: 100%
+						object-fit: cover
+						@media(max-width:992px)
+							padding: 0
+							order: 0
+							height: 40vw
+						@media(max-width:800px)
+							height: 45vw
+						@media(max-width:600px)
+							height: 60vw
+						@media(max-width:375px)
+							order: 0
+							height: 290px
+						@media(max-height:450px)
+							height: 45vw
+	& .case__bg_color
+		position: absolute
+		top: 0
+		right: 0
+		height: 43vw
+		width: 49vw
+		background-color: rgba(241, 241, 241, 0.47)
+		z-index: -1
+		@media(max-width:992px)
+			top: 370px
+			height: 72vw
+			width: 100vw
+		@media(max-width:767px)
+			display: none
+		@media(max-width:375px)
+			top: 130vw
+			height: 115vw

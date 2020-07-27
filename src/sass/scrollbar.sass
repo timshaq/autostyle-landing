@@ -1,0 +1,29 @@
+.scrollbar
+	height: 100%
+	position: fixed
+	top: 0
+	right: 0
+	width: 5px
+	z-index: 100
+	display: none
+	@media(max-width: 1023px), handheld
+		display: none
+	& .scrollbar__track
+		height: 100%
+		position: relative
+		background: rgba(0,0,0,.1)
+		&:hover
+			background: rgba(0,0,0,.3)
+			& .track__thumb
+				opacity: 1
+		& .track__thumb
+			position: absolute
+			top: 0
+			right: 0
+			width: 5px
+			height: 10%
+			background: #FFD338
+			opacity: .7
+			box-shadow: 0px 4px 17px rgba(255, 211, 56, 0.58)
+			border-radius: 10px
+			transition: all ease .5s

@@ -1,0 +1,64 @@
+.targets
+	height: 461px
+	display: flex
+	align-items: flex-end
+	position: relative
+	@media(max-width:992px)
+		height: fit-content
+		padding: 60px 0
+	& .targets__fix-container
+		height: 80%
+		& .targets__description
+			height: 81%
+			display: flex
+			align-items: center
+			justify-content: space-between
+			@media(max-width:992px)
+				flex-wrap: wrap
+			& .targets__text-block
+				width: 30%
+				height: 65%
+				@media(max-width:992px)
+					width: 100%
+					height: fit-content
+					padding: 60px 0 0 0
+				& .targets__title_h4
+					font-size: 22px
+					font-weight: 700
+					line-height: 125.6%
+					letter-spacing: 0.05em
+					& .title__item_yellow
+						color: #FFD338
+				& .targets__article
+					font-size: 16px
+					line-height: 125.6%
+					letter-spacing: 0.05em
+					padding: 8% 0 0 0
+	& .targets__bg_text
+		position: absolute
+		top: 3vw
+		right: 8vw
+		font-size: 15vw
+		font-weight: 700
+		line-height: 125.6%
+		letter-spacing: 0.05em
+		color: #F9F9F9
+		z-index: -1
+		@media(max-width:992px)
+			font-size: 20vw
+			right: 0
+			top: 0
+		@media(max-width:450px)
+			font-size: 30vw
+			right: 0
+			top: 3vw
+	& .targets__bg_img
+		width: 45%
+		height: 1176px
+		position: absolute
+		top: 0
+		left: 0
+		background-image: url('/img/bg4.png')
+		background-repeat: no-repeat
+		background-size: cover
+		z-index: -2
