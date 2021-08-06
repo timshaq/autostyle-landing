@@ -1,233 +1,195 @@
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const autopref = require('gulp-autoprefixer');
+const cleanCSS = require('gulp-clean-css');
+const uglify = require('gulp-uglify');
+const del = require('del');
+const browserSync = require('browser-sync').create();
+const imagemin = require('gulp-imagemin');
+const webp = require('gulp-webp');
+const webphtml = require('gulp-webp-html');
+const sourcemaps = require('gulp-sourcemaps');
+const webpack = require("webpack-stream");
+const babel = require("gulp-babel");
+const rename = require("gulp-rename");
+const sass = require("gulp-sass");
+const ttf2woff = require('gulp-ttf2woff');
+const ttf2woff2 = require('gulp-ttf2woff2');
+const changed = require('gulp-changed');
+const fileinclude = require("gulp-file-include");
 
-const project_folder = "build";
-const source_folder = "src";
 
-const fs = require('fs');
-
-const path = {
-	build: {
-		html: project_folder + "/",
-		css: project_folder + "/css/",
-		js: project_folder + "/js/",
-		img: project_folder + "/img/",
-		fonts: project_folder + "/fonts/",
-		props: project_folder + "/props/",
-		favicon: project_folder + "/favicon/",
-		php: project_folder + "/"
-	},
-	src: {
-		html: [source_folder + "/*.html", "!" + source_folder + "/_*.html"],
-		css: source_folder + "/sass/main.sass",
-		js: source_folder + "/js/main.js",
-		img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
-		fonts: source_folder + "/fonts/*.ttf",
-		props: source_folder + "/props/**/*",
-		favicon: source_folder + "/favicon/**/*",
-		php: source_folder + "/*.php"
-	},
-	watch: {
-		html: source_folder + "/**/*.html",
-		css: source_folder + "/sass/**/*.sass",
-		js: source_folder + "/js/**/*.js",
-		img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
-		props: source_folder + "/props/"
-	},
-	clean: "./" + project_folder + "/"
+const src = {
+    js: './src/assets/js/**/*',
+    css: './src/assets/sass/**/*',
+    img: './src/assets/img/**/*',
+    lib: './src/assets/lib/**/*',
+    fonts: './src/assets/fonts/**/*',
+    fontsConvert: './src/assets/fonts/',
+    ttfFonts: './src/assets/fonts/**/*.ttf',
+    html: './src/*.html',
+    htmlComponents: './src/assets/html/**/*.html'
 }
 
-const { src, dest } = require('gulp'),
-	gulp = require('gulp'),
-	browsersync = require("browser-sync").create(),
-	fileinclude = require("gulp-file-include"),
-	del = require("del"),
-	sass = require("gulp-sass"),
-	autoprefixer = require("gulp-autoprefixer"),
-	group_media = require("gulp-group-css-media-queries"),
-	clean_css = require("gulp-clean-css"),
-	rename = require("gulp-rename"),
-	uglify = require("gulp-uglify-es").default,
-	imagemin = require("gulp-imagemin"),
-	webp = require('gulp-webp'),
-	webphtml = require('gulp-webp-html'),
-	webpcss = require("gulp-webpcss"),
-	svgSprite = require('gulp-svg-sprite'),
-	ttf2woff = require('gulp-ttf2woff'),
-	ttf2woff2 = require('gulp-ttf2woff2'),
-	fonter = require('gulp-fonter'),
-	babel = require("gulp-babel");
 
-function browserSync(params) {
-	browsersync.init({
-		server: {
-			baseDir: "./" + project_folder + "/"
-		},
-		port: 3000,
-		notify: false
-	})
+const build = {
+    js: './build/assets/js/',
+    css: './build/assets/css/',
+    img: './build/assets/img/',
+    lib: './build/assets/lib/',
+    fonts: './build/assets/fonts/',
+    html: './build/'
+}
+
+// WATCH
+function styles() {
+    return gulp.src('./src/assets/sass/main.sass')
+    .pipe(
+        sass({
+            outputStyle: "expanded"
+        })
+    )
+    .pipe(autopref())
+    .pipe(sourcemaps.init())
+    .pipe(concat(`style.css`))
+        .pipe(sourcemaps.write('/srcmaps/'))
+        .pipe(gulp.dest(build.css))
+    .pipe(cleanCSS({
+        level: 2 
+    }))
+        .pipe(
+            rename({
+                extname: ".min.css"
+            })
+        )
+    .pipe(gulp.dest(build.css))
+    .pipe(browserSync.stream())
+}
+
+function scripts(modeName) {
+    return gulp.src(src.js)
+    .pipe(webpack({
+        watch: false,
+        mode: modeName,
+        module: {
+          rules: [
+            { test: /\.(js)$/ },
+          ],
+        },
+        
+        stats: 'errors-only'
+    }))
+    .pipe(babel())
+    .on('error', console.error.bind(console))
+    .pipe(concat(`script.js`))
+        .pipe(gulp.dest(build.js))
+    .pipe(uglify({
+        toplevel: true
+    }))
+        .pipe(
+            rename({
+                extname: ".min.js"
+            })
+        )
+
+    .pipe(gulp.dest(build.js))
+    .pipe(browserSync.stream())
+}
+
+function libraries() {
+    return gulp.src(src.lib)
+        .pipe(gulp.dest(build.lib))
+}
+
+// конвертация в форматы
+function fontsConvertation() {
+    gulp.src(src.fonts)
+        .pipe(gulp.dest(build.fonts))
+    gulp.src(src.ttfFonts)
+        .pipe(ttf2woff())
+        .pipe(gulp.dest(build.fonts));
+    return gulp.src(src.ttfFonts)
+        .pipe(ttf2woff2())
+        .pipe(gulp.dest(src.fontsConvert));
+}
+
+// только перенос
+function fonts() {
+    return gulp.src(src.fonts)
+        .pipe(gulp.dest(build.fonts))
+}
+
+
+function compress () {
+    return gulp.src(src.img)
+    .pipe(changed(build.img))
+    .pipe(webp({
+        quality: 80
+    }))
+        .pipe(gulp.dest(build.img))
+        
+    .pipe(gulp.src(src.img))
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            interlaced: true,
+            optimizationlevel: 5
+        }))
+        .pipe(gulp.dest(build.img))
+    .pipe(browserSync.stream())
+}
+
+function clean() {
+    return del([build.css, build.html, build.fonts, build.img, build.js, build.lib])
 }
 
 function html() {
-	return src(path.src.html)
-		.pipe(fileinclude())
-		.pipe(webphtml())
-		.pipe(dest(path.build.html))
-		.pipe(browsersync.stream())
-}
-function props() {
-	return src(path.src.props)
-		.pipe(dest(path.build.props))
-}
-function favicon() {
-	return src(path.src.favicon)
-		.pipe(dest(path.build.favicon))
-}
-function php() {
-	return src(path.src.php)
-		.pipe(dest(path.build.php))
+    return gulp.src(src.html)
+        .pipe(fileinclude())
+        .pipe(webphtml())
+        .pipe(gulp.dest(build.html))
 }
 
-function css() {
-	return src(path.src.css)
-		.pipe(
-			sass({
-				outputStyle: "expanded"
-			})
-		)
-		.pipe(
-			group_media()
-		)
-		.pipe(
-			autoprefixer({
-        		browserlist: ['> 1%'],
-				cascade: true
-			})
-		)
-		.pipe(webpcss({webpClass: '.webp',noWebpClass: '.no-webp'}))
-		.pipe(dest(path.build.css))
-		.pipe(clean_css())
-		.pipe(
-			rename({
-				extname: ".min.css"
-			})
-		)
-		.pipe(dest(path.build.css))
-		.pipe(browsersync.stream())
+function watch() {
+    browserSync.init({
+        ui: {
+            port: 8080,
+        },
+        server: {
+            baseDir: "./",
+            index: 'build/index.html',
+            directory: true
+        }
+    });
+    // SASS
+    gulp.watch(src.css, styles)
+    gulp.watch(src.img, compress)
+    gulp.watch(src.js, devScripts)
+    gulp.watch(src.lib, libraries)
+    gulp.watch(src.fonts, fonts)
+    gulp.watch(src.html, html).on('change', browserSync.reload);
+    gulp.watch(src.htmlComponents, html).on('change', browserSync.reload);
 }
 
-function js() {
-	return src(path.src.js)
-		.pipe(fileinclude())
-		.pipe(dest(path.build.js))
-	    .pipe(babel())
-	    	.on('error', console.error.bind(console))
-		.pipe(
-			uglify()
-		)
-		.pipe(
-			rename({
-				extname: ".min.js"
-			})
-		)
-		.pipe(dest(path.build.js))
-		.pipe(browsersync.stream())
-}
 
-function images() {
-	return src(path.src.img)
-		.pipe(
-			webp({
-				quality: 70
-			})
-		)
-		.pipe(dest(path.build.img))
-		.pipe(src(path.src.img))
-		.pipe(
-			imagemin({
-				progressive: true,
-				svgoPlugins: [{ removeViewBox: false }],
-				interlaced: true,
-				optimizationLevel: 3 // 0 to 7
-			})
-		)
-		.pipe(dest(path.build.img))
-		.pipe(browsersync.stream())
-}
+const buildScripts = () => scripts('production');
+const devScripts = () => scripts('development');
 
-function fonts() {
-	src(path.src.fonts)
-		.pipe(ttf2woff())
-		.pipe(dest(path.build.fonts));
-	return src(path.src.fonts)
-		.pipe(ttf2woff2())
-		.pipe(dest(path.build.fonts));
-};
+//gulp.task('watch', watch);
 
-gulp.task('otf2ttf', function () {
-	return src([source_folder + '/fonts/*.otf'])
-		.pipe(fonter({
-			formats: ['ttf']
-		}))
-		.pipe(dest(source_folder + '/fonts/'));
-})
+gulp.task('build', gulp.series(clean, gulp.parallel(fonts, html, styles, buildScripts, compress, libraries)));
 
-gulp.task('svgSprite', function () {
-	return gulp.src([source_folder + '/iconsprite/*.svg'])
-		.pipe(svgSprite({
-			mode: {
-				stack: {
-					sprite: "../icons/icons.svg",  //sprite file name
-					example: true
-				}
-			},
-		}
-		))
-		.pipe(dest(path.build.img))
-})
+gulp.task('watch', gulp.series(clean, gulp.parallel(fonts, html, styles, devScripts, compress, libraries), watch));
 
-function fontsStyle(params) {
-	let file_content = fs.readFileSync(source_folder + '/sass/fonts.sass');
-	if (file_content == '') {
-		fs.writeFile(source_folder + '/sass/fonts.sass', '', cb);
-		return fs.readdir(path.build.fonts, function (err, items) {
-			if (items) {
-				let c_fontname;
-				for (var i = 0; i < items.length; i++) {
-					let fontname = items[i].split('.');
-					fontname = fontname[0];
-					if (c_fontname != fontname) {
-						fs.appendFile(source_folder + '/sass/fonts.sass', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
-					}
-					c_fontname = fontname;
-				}
-			}
-		})
-	}
-}
+// gulp.task('dev', gulp.series('build', 'watch'));
 
-function cb() {
+gulp.task('clean', clean);
+gulp.task('compress', compress);
+gulp.task('styles', styles);
+gulp.task('bScripts', buildScripts);
+gulp.task('dScripts', devScripts);
+gulp.task('fonts', fonts);
+gulp.task('html', html);
+gulp.task('libraries', libraries);
 
-}
-
-function watchFiles(params) {
-	gulp.watch([path.watch.html], html);
-	gulp.watch([path.watch.css], css);
-	gulp.watch([path.watch.js], js);
-	gulp.watch([path.watch.img], images);
-}
-
-function clean(params) {
-	return del(path.clean);
-}
-
-const build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts, props, favicon, php));
-const watch = gulp.parallel(build, watchFiles, browserSync);
-
-exports.fontsStyle = fontsStyle;
-exports.fonts = fonts;
-exports.images = images;
-exports.js = js;
-exports.css = css;
-exports.html = html;
-exports.build = build;
-exports.watch = watch;
-exports.default = watch;
+gulp.task('fonts-convert', fontsConvertation)
