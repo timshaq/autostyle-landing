@@ -396,7 +396,7 @@ h6 {
 }
 
 .no-webp .detailing{
-  background-image: url("img/bg1.png"); }
+  background-image: url("./img/bg1.png"); }
 
 .detailing {
   height: 896px;
@@ -456,7 +456,7 @@ h6 {
 }
 
 .detailing .detailing__fix-container .detailing__preview .detailing__title_h1:before {
-  content: url("img/h1_before.png");
+  content: url("./img/h1_before.png");
   position: absolute;
   top: 50%;
   left: -12.5px;
@@ -486,7 +486,7 @@ h6 {
 }
 
 .detailing .detailing__fix-container .preview__advantage-list .advantage-list__item:before {
-  content: url("img/list_item.png");
+  content: url("./img/list_item.png");
   position: absolute;
   left: -7px;
 }
@@ -2450,7 +2450,7 @@ h6 {
   }
 }
 
-.webp .detailing{ background-image: url(img/bg1.webp); }
+.webp .detailing{ background-image: url(./img/bg1.webp); }
 
 .webp .about-company .about-company__bg_img{ background-image: url(img/bg2.webp); }
 
